@@ -49,7 +49,8 @@ public class Main {
         movieManager.addMovie(movie);
 
         movieManager.addActors(movie, actors);
-        movieManager.addAuthor(movie, author);
+
+        //movieManager.addAuthor(movie, author);
 
         System.out.println(movie);
 /*

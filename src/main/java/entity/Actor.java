@@ -19,11 +19,11 @@ public class Actor {
     @Column(name = "surname")
     private String surname;
 
-    @ManyToMany(fetch = FetchType.EAGER)
+    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinTable(
             name = "lists",
             joinColumns = { @JoinColumn(name = "id_actor")},
-            inverseJoinColumns = { @JoinColumn(name = "id_list") }
+            inverseJoinColumns = { @JoinColumn(name = "id_movie") }
     )
     Set<Movie> movies = new HashSet<>();
 

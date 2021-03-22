@@ -2,6 +2,7 @@ package manager;
 
 import entity.Actor;
 import entity.HibernateFactory;
+import entity.Movie;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.hibernate.query.Query;
@@ -12,6 +13,7 @@ import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 public class ActorManager {
     public boolean addActor(Actor actor){
@@ -22,6 +24,11 @@ public class ActorManager {
     public boolean deleteActor(Actor actor){
         EntityManager entityManager = new EntityManager();
         return entityManager.delete(actor);
+    }
+
+    public Actor updateActor(Actor actor){
+        EntityManager entityManager = new EntityManager();
+        return (Actor) entityManager.update(actor);
     }
 
     public boolean deleteActorById(Long id){
@@ -48,14 +55,9 @@ public class ActorManager {
         Actor actor = null;
         HibernateFactory hibernateFactory = new HibernateFactory();
         Session session = hibernateFactory.getSessionFactory().openSession();
-        try {
-            actor = session.load(Actor.class, id);
-        } catch (Exception e) {
-            e.printStackTrace();
-        } finally {
-            session.close();
-            hibernateFactory.getSessionFactory().close();
-        }
+        actor = session.load(Actor.class, id);
+        session.close();
+        hibernateFactory.getSessionFactory().close();
         return actor;
     }
 
@@ -63,23 +65,24 @@ public class ActorManager {
         List<Actor> list = new ArrayList<>();
         HibernateFactory hibernateFactory = new HibernateFactory();
         Session session = hibernateFactory.getSessionFactory().openSession();
-        try {
-            CriteriaBuilder criteriaBuilder = session.getCriteriaBuilder();
-            CriteriaQuery<Actor> criteriaQuery = criteriaBuilder.createQuery(Actor.class);
-            Root<Actor> root = criteriaQuery.from(Actor.class);
-            Predicate[] predicates = new Predicate[2];
-            predicates[0] = criteriaBuilder.equal(root.get("name"), name);
-            predicates[1] = criteriaBuilder.equal(root.get("surname"), surname);
-            criteriaQuery.select(root).where(predicates);
-
-            Query<Actor> query = session.createQuery(criteriaQuery);
-            list = query.getResultList();
-        } catch (Exception e) {
-            e.printStackTrace();
-        } finally {
-            session.close();
-            hibernateFactory.getSessionFactory().close();
-        }
+        CriteriaBuilder criteriaBuilder = session.getCriteriaBuilder();
+        CriteriaQuery<Actor> criteriaQuery = criteriaBuilder.createQuery(Actor.class);
+        Root<Actor> root = criteriaQuery.from(Actor.class);
+        Predicate[] predicates = new Predicate[2];
+        predicates[0] = criteriaBuilder.equal(root.get("name"), name);
+        predicates[1] = criteriaBuilder.equal(root.get("surname"), surname);
+        criteriaQuery.select(root).where(predicates);
+        Query<Actor> query = session.createQuery(criteriaQuery);
+        list = query.getResultList();
+        session.close();
+        hibernateFactory.getSessionFactory().close();
         return list;
+    }
+
+    public Actor addMovie(Actor actor, Movie movie){
+        Set<Movie> movies = actor.getMovies();
+        movies.add(movie);
+        actor.setMovies(movies);
+        return updateActor(actor);
     }
 }

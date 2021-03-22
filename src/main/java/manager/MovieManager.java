@@ -93,40 +93,16 @@ public class MovieManager {
 
     public Movie addActors(Movie movie, List<Actor> actorList){
         Set<Actor> actorSet = movie.getActors();
-        for (Actor actor : actorList)
+        ActorManager actorManager = new ActorManager();
+        for (Actor actor : actorList) {
             actorSet.add(actor);
+        }
         movie.setActors(actorSet);
-        /*HibernateFactory hibernateFactory = new HibernateFactory();
-        Session session = hibernateFactory.getSessionFactory().openSession();
-        Transaction transaction = session.beginTransaction();
-        try {
-            session.update(movie);
-            session.getTransaction().commit();
-        } catch (Exception e) {
-            e.printStackTrace();
-            session.getTransaction().rollback();
-        } finally {
-            session.close();
-            hibernateFactory.getSessionFactory().close();
-        }*/
         return updateMovie(movie);
     }
 
     public Movie addAuthor(Movie movie, Author author){
         movie.setAuthor(author);
-        /*HibernateFactory hibernateFactory = new HibernateFactory();
-        Session session = hibernateFactory.getSessionFactory().openSession();
-        Transaction transaction = session.beginTransaction();
-        try {
-            session.update(movie);
-            session.getTransaction().commit();
-        } catch (Exception e) {
-            e.printStackTrace();
-            session.getTransaction().rollback();
-        } finally {
-            session.close();
-            hibernateFactory.getSessionFactory().close();
-        }*/
         return updateMovie(movie);
     }
 }

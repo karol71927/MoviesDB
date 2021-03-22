@@ -12,7 +12,7 @@ public class EntityManager {
         Transaction transaction = session.beginTransaction();
         try {
             session.save(object);
-            session.getTransaction().commit();
+            transaction.commit();
             isAdded = true;
         } catch (Exception e) {
             transaction.rollback();
@@ -31,7 +31,7 @@ public class EntityManager {
         Transaction transaction = session.beginTransaction();
         try {
             session.delete(object);
-            session.getTransaction().commit();
+            transaction.commit();
             isDeleted = true;
         } catch (Exception e) {
             transaction.rollback();
@@ -49,10 +49,10 @@ public class EntityManager {
         Transaction transaction = session.beginTransaction();
         try {
             session.update(object);
-            session.getTransaction().commit();
+            transaction.commit();
         } catch (Exception e) {
             e.printStackTrace();
-            session.getTransaction().rollback();
+            transaction.rollback();
         } finally {
             session.close();
             hibernateFactory.getSessionFactory().close();

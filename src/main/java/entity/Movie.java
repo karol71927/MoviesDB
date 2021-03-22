@@ -19,7 +19,7 @@ public class Movie {
     @JoinColumn(name = "id_author", referencedColumnName = "ID_author")
     private Author author;
 
-    @ManyToMany(mappedBy = "movies")
+    @ManyToMany(mappedBy = "movies", cascade = CascadeType.ALL)
     private Set<Actor> actors = new HashSet<>();
 
     public Long getIdMovie() {
