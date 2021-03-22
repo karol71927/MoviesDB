@@ -19,7 +19,12 @@ public class Movie {
     @JoinColumn(name = "id_author", referencedColumnName = "ID_author")
     private Author author;
 
-    @ManyToMany(mappedBy = "movies", cascade = CascadeType.ALL)
+    @ManyToMany(cascade = CascadeType.ALL)
+    @JoinTable(
+            name = "lists",
+            joinColumns = { @JoinColumn(name = "id_movie")},
+            inverseJoinColumns = { @JoinColumn(name = "id_actor") }
+    )
     private Set<Actor> actors = new HashSet<>();
 
     public Long getIdMovie() {
