@@ -42,4 +42,21 @@ public class EntityManager {
         }
         return isDeleted;
     }
+
+    public Object update(Object object){
+        HibernateFactory hibernateFactory = new HibernateFactory();
+        Session session = hibernateFactory.getSessionFactory().openSession();
+        Transaction transaction = session.beginTransaction();
+        try {
+            session.update(object);
+            session.getTransaction().commit();
+        } catch (Exception e) {
+            e.printStackTrace();
+            session.getTransaction().rollback();
+        } finally {
+            session.close();
+            hibernateFactory.getSessionFactory().close();
+        }
+        return object;
+    }
 }

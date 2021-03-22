@@ -40,19 +40,24 @@ public class Main {
         actorManager.addActor(actor);
 
         List<Actor> actors = actorManager.findByName("Tomasz", "Karolak");
-        for( Actor actor1 : actors){
-            System.out.println(actor1);
-            actorManager.deleteActor(actor1);
-        }
 
-/*
+
         Movie movie = new Movie();
         movie.setTitle("Maczeta zabija");
 
         MovieManager movieManager = new MovieManager();
         movieManager.addMovie(movie);
 
- */
+        movieManager.addActors(movie, actors);
+        movieManager.addAuthor(movie, author);
 
+        System.out.println(movie);
+/*
+        for( Actor actor1 : actors){
+            System.out.println(actor1);
+            actorManager.deleteActor(actor1);
+        }
+        movieManager.deleteMovie(movie);
+*/
     }
 }
