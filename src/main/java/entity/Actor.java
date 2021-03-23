@@ -56,11 +56,14 @@ public class Actor {
 
     @Override
     public String toString() {
-        return "Actor{" +
+        String string = "Actor{" +
                 "idActor=" + idActor +
                 ", name='" + name + '\'' +
-                ", surname='" + surname + '\'' +
-                ", movies=" + movies +
-                '}';
+                ", surname='" + surname + '\'';
+        if(movies != null)
+            string += ", movies=" + movies;
+
+        string += "}";
+        return string;
     }
 }
