@@ -74,11 +74,11 @@ public class MovieManager {
             CriteriaBuilder criteriaBuilder = session.getCriteriaBuilder();
             CriteriaQuery<Movie> criteriaQuery = criteriaBuilder.createQuery(Movie.class);
             Root<Movie> root = criteriaQuery.from(Movie.class);
-            Predicate[] predicates = new Predicate[2];
-            predicates[0] = criteriaBuilder.equal(root.get("title"), title);
+            Predicate predicates = criteriaBuilder.like(root.get("title"), "%" + title + "%");
             criteriaQuery.select(root).where(predicates);
 
             Query<Movie> query = session.createQuery(criteriaQuery);
+            Hibernate.initialize(list);
             list = query.getResultList();
         } catch (Exception e) {
             e.printStackTrace();
@@ -91,7 +91,6 @@ public class MovieManager {
 
     public Movie addActors(Movie movie, List<Actor> actorList){
         Set<Actor> actorSet = movie.getActors();
-        ActorManager actorManager = new ActorManager();
         for (Actor actor : actorList) {
             actorSet.add(actor);
         }
