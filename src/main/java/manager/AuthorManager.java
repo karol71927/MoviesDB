@@ -61,23 +61,17 @@ public class AuthorManager {
         List<Author> list = new ArrayList<>();
         HibernateFactory hibernateFactory = new HibernateFactory();
         Session session = hibernateFactory.getSessionFactory().openSession();
-        try {
-            CriteriaBuilder criteriaBuilder = session.getCriteriaBuilder();
-            CriteriaQuery<Author> criteriaQuery = criteriaBuilder.createQuery(Author.class);
-            Root<Author> root = criteriaQuery.from(Author.class);
-            Predicate[] predicates = new Predicate[2];
-            predicates[0] = criteriaBuilder.like(root.get("name"), "%" + name + "%");
-            predicates[1] = criteriaBuilder.like(root.get("surname"), "%" + surname + "%");
-            criteriaQuery.select(root).where(predicates);
-
-            Query<Author> query = session.createQuery(criteriaQuery);
-            list = query.getResultList();
-        } catch (Exception e) {
-            e.printStackTrace();
-        } finally {
-            session.close();
-            hibernateFactory.getSessionFactory().close();
-        }
+        CriteriaBuilder criteriaBuilder = session.getCriteriaBuilder();
+        CriteriaQuery<Author> criteriaQuery = criteriaBuilder.createQuery(Author.class);
+        Root<Author> root = criteriaQuery.from(Author.class);
+        Predicate[] predicates = new Predicate[2];
+        predicates[0] = criteriaBuilder.like(root.get("name"), "%" + name + "%");
+        predicates[1] = criteriaBuilder.like(root.get("surname"), "%" + surname + "%");
+        criteriaQuery.select(root).where(predicates);
+        Query<Author> query = session.createQuery(criteriaQuery);
+        list = query.getResultList();
+        session.close();
+        hibernateFactory.getSessionFactory().close();
         return list;
     }
 }
