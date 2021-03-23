@@ -4,6 +4,7 @@ import entity.Actor;
 import entity.Author;
 import entity.HibernateFactory;
 import entity.Movie;
+import org.hibernate.Hibernate;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.hibernate.query.Query;
@@ -40,6 +41,7 @@ public class MovieManager {
         Transaction transaction = session.beginTransaction();
         try {
             Movie movie = session.load(Movie.class, id);
+            Hibernate.initialize(movie);
             session.delete(movie);
             session.getTransaction().commit();
             isDeleted = true;
@@ -57,14 +59,10 @@ public class MovieManager {
         Movie movie = null;
         HibernateFactory hibernateFactory = new HibernateFactory();
         Session session = hibernateFactory.getSessionFactory().openSession();
-        try {
-            movie = session.load(Movie.class, id);
-        } catch (Exception e) {
-            e.printStackTrace();
-        } finally {
-            session.close();
-            hibernateFactory.getSessionFactory().close();
-        }
+        movie = session.load(Movie.class, id);
+        Hibernate.initialize(movie);
+        session.close();
+        hibernateFactory.getSessionFactory().close();
         return movie;
     }
 

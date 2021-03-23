@@ -3,6 +3,7 @@ package manager;
 import entity.Actor;
 import entity.HibernateFactory;
 import entity.Movie;
+import org.hibernate.Hibernate;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.hibernate.query.Query;
@@ -38,6 +39,7 @@ public class ActorManager {
         Transaction transaction = session.beginTransaction();
         try {
             Actor actor = session.load(Actor.class, id);
+            Hibernate.initialize(actor);
             session.delete(actor);
             session.getTransaction().commit();
             isDeleted = true;
@@ -56,6 +58,7 @@ public class ActorManager {
         HibernateFactory hibernateFactory = new HibernateFactory();
         Session session = hibernateFactory.getSessionFactory().openSession();
         actor = session.load(Actor.class, id);
+        Hibernate.initialize(actor);
         session.close();
         hibernateFactory.getSessionFactory().close();
         return actor;

@@ -2,6 +2,7 @@ package manager;
 
 import entity.Author;
 import entity.HibernateFactory;
+import org.hibernate.Hibernate;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.hibernate.query.Query;
@@ -31,6 +32,7 @@ public class AuthorManager {
         Transaction transaction = session.beginTransaction();
         try {
             Author author = session.load(Author.class, id);
+            Hibernate.initialize(author);
             session.delete(author);
             session.getTransaction().commit();
             isDeleted = true;
@@ -48,14 +50,10 @@ public class AuthorManager {
         Author author = null;
         HibernateFactory hibernateFactory = new HibernateFactory();
         Session session = hibernateFactory.getSessionFactory().openSession();
-        try {
-            author = session.load(Author.class, id);
-        } catch (Exception e) {
-            e.printStackTrace();
-        } finally {
-            session.close();
-            hibernateFactory.getSessionFactory().close();
-        }
+        author = session.load(Author.class, id);
+        Hibernate.initialize(author);
+        session.close();
+        hibernateFactory.getSessionFactory().close();
         return author;
     }
 
@@ -68,8 +66,8 @@ public class AuthorManager {
             CriteriaQuery<Author> criteriaQuery = criteriaBuilder.createQuery(Author.class);
             Root<Author> root = criteriaQuery.from(Author.class);
             Predicate[] predicates = new Predicate[2];
-            predicates[0] = criteriaBuilder.equal(root.get("name"), name);
-            predicates[1] = criteriaBuilder.equal(root.get("surname"), surname);
+            predicates[0] = criteriaBuilder.like(root.get("name"), "%" + name + "%");
+            predicates[1] = criteriaBuilder.like(root.get("surname"), "%" + surname + "%");
             criteriaQuery.select(root).where(predicates);
 
             Query<Author> query = session.createQuery(criteriaQuery);
